@@ -18,11 +18,11 @@ between the cache CCD and the frequency CCD.
 ## Installation
 
 ```bash
-git clone https://github.com/xela-io/omarchy-x3d-mode.git \
-  ~/.config/omarchy/plugins/xela.x3d-mode
-omarchy bar move xela.x3d-mode --section right
-omarchy restart shell
+omarchy plugin add https://github.com/xela-io/omarchy-x3d-mode.git --enable --yes
 ```
 
-If necessary, add `{ "id": "xela.x3d-mode" }` to the desired section in
-`~/.config/omarchy/shell.json`.
+## Removal
+
+```bash
+omarchy plugin remove xela.x3d-mode --yes
+```
