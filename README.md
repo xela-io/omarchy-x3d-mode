@@ -7,6 +7,7 @@ between the cache CCD and the frequency CCD.
 - `GHz` means the frequency CCD is preferred.
 - Left-click switches modes using a Polkit authorization prompt.
 - Right-click refreshes the displayed state.
+- The widget hides itself when the `amd_x3d_mode` interface is missing.
 
 ## Requirements
 
