@@ -8,9 +8,10 @@ BarWidget {
   moduleName: "xela.x3d-mode"
   readonly property string modePath: "/sys/devices/platform/AMDI0101:00/amd_x3d_mode"
   property string mode: "unknown"
+  property bool available: false
   property bool switching: false
 
-  function refresh() { if (!probe.running) probe.running = true }
+  function refresh() { modeFile.reload() }
   function toggleMode() {
     if (switching || mode === "unknown") return
     var nextMode = mode === "cache" ? "frequency" : "cache"
@@ -19,16 +20,27 @@ BarWidget {
     apply.running = true
   }
 
-  implicitWidth: button.implicitWidth
+  // Hidden entirely on systems without the amd_x3d_mode interface.
+  visible: available
+  implicitWidth: available ? button.implicitWidth : 0
   implicitHeight: button.implicitHeight
 
-  Process {
-    id: probe
-    command: ["cat", root.modePath]
-    stdout: StdioCollector { id: probeOutput; waitForEnd: true }
-    onExited: function(exitCode) {
-      var value = String(probeOutput.text || "").trim()
-      root.mode = exitCode === 0 && (value === "cache" || value === "frequency") ? value : "unknown"
+  // Writes to the sysfs attribute raise inotify events, so the file is watched
+  // instead of polled.
+  FileView {
+    id: modeFile
+    path: root.modePath
+    watchChanges: true
+    printErrors: false
+    onFileChanged: reload()
+    onLoaded: {
+      var value = String(text() || "").trim()
+      root.mode = value === "cache" || value === "frequency" ? value : "unknown"
+      root.available = true
+    }
+    onLoadFailed: function(error) {
+      root.mode = "unknown"
+      root.available = false
     }
   }
   Process {
@@ -40,7 +52,8 @@ BarWidget {
         root.bar.run("omarchy-notification-send 'X3D-Modus konnte nicht geändert werden'")
     }
   }
-  Timer { interval: 3000; running: true; repeat: true; triggeredOnStart: true; onTriggered: root.refresh() }
+  // The driver may load after the bar starts; check again rarely while absent.
+  Timer { interval: 60000; running: !root.available; repeat: true; onTriggered: root.refresh() }
 
   WidgetButton {
     id: button
