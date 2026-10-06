@@ -37,7 +37,7 @@ BarWidget {
       root.switching = false
       root.refresh()
       if (exitCode !== 0 && root.bar)
-        root.bar.run("omarchy-notification-send 'X3D-Modus konnte nicht geändert werden'")
+        root.bar.run("omarchy-notification-send 'Could not change X3D mode'")
     }
   }
   Timer { interval: 3000; running: true; repeat: true; triggeredOnStart: true; onTriggered: root.refresh() }
@@ -49,8 +49,8 @@ BarWidget {
     text: root.switching ? "…" : (root.mode === "cache" ? "3D" : (root.mode === "frequency" ? "GHz" : "?"))
     horizontalMargin: 7.5
     tooltipText: root.mode === "cache"
-      ? "X3D: Cache-CCD bevorzugt — klicken für Frequenz-CCD"
-      : (root.mode === "frequency" ? "X3D: Frequenz-CCD bevorzugt — klicken für Cache-CCD" : "X3D-Modus nicht verfügbar")
+      ? "X3D: cache CCD preferred — click for frequency CCD"
+      : (root.mode === "frequency" ? "X3D: frequency CCD preferred — click for cache CCD" : "X3D mode unavailable")
     onPressed: function(mouseButton) {
       if (mouseButton === Qt.LeftButton) root.toggleMode()
       else root.refresh()
