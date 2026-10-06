@@ -1,0 +1,13 @@
+#!/bin/sh
+# Writes the AMD X3D scheduler preference. Installed root-owned so the
+# matching Polkit action can allow it without a password prompt.
+set -eu
+
+mode_path=/sys/devices/platform/AMDI0101:00/amd_x3d_mode
+
+case "${1:-}" in
+  cache|frequency) ;;
+  *) echo "usage: omarchy-x3d-mode-set cache|frequency" >&2; exit 2 ;;
+esac
+
+printf '%s\n' "$1" > "$mode_path"

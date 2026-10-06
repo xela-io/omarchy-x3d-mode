@@ -7,6 +7,7 @@ BarWidget {
   id: root
   moduleName: "xela.x3d-mode"
   readonly property string modePath: "/sys/devices/platform/AMDI0101:00/amd_x3d_mode"
+  readonly property string helperPath: "/usr/local/bin/omarchy-x3d-mode-set"
   property string mode: "unknown"
   property bool switching: false
 
@@ -15,7 +16,10 @@ BarWidget {
     if (switching || mode === "unknown") return
     var nextMode = mode === "cache" ? "frequency" : "cache"
     switching = true
-    apply.command = ["pkexec", "sh", "-c", "printf '%s\\n' '" + nextMode + "' > '" + modePath + "'"]
+    // Prefer the installed helper (no password via its Polkit action), else fall back to a prompted write.
+    apply.command = ["sh", "-c",
+      "if [ -x \"$1\" ]; then exec pkexec \"$1\" \"$2\"; fi; exec pkexec sh -c 'printf \"%s\\n\" \"$1\" > \"$2\"' sh \"$2\" \"$3\"",
+      "sh", helperPath, nextMode, modePath]
     apply.running = true
   }
 

@@ -21,7 +21,29 @@ between the cache CCD and the frequency CCD.
 omarchy plugin add https://github.com/xela-io/omarchy-x3d-mode.git --enable --yes
 ```
 
+### Optional: switch without a password prompt
+
+By default every switch asks for authorization through Polkit. To skip the
+prompt, install the small helper from the plugin directory:
+
+```bash
+./helper/install.sh
+```
+
+This installs `/usr/local/bin/omarchy-x3d-mode-set`, which only accepts
+`cache` or `frequency`, and a Polkit action that lets the active local session
+run it without a password. Remote and inactive sessions still need admin
+authentication. The widget uses the helper automatically when it is present.
+
+To remove it again:
+
+```bash
+./helper/install.sh --remove
+```
+
 ## Removal
+
+Remove the optional helper first if you installed it, then:
 
 ```bash
 omarchy plugin remove xela.x3d-mode --yes
