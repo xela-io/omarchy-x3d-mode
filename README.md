@@ -8,6 +8,14 @@ between the cache CCD and the frequency CCD.
 - Left-click switches modes using a Polkit authorization prompt.
 - Right-click refreshes the displayed state.
 
+![X3D Mode widget in cache and frequency mode](preview.png)
+
+## Screenshots
+
+| Cache CCD preferred | Frequency CCD preferred |
+| --- | --- |
+| ![Cache mode](screenshots/bar-cache.png) | ![Frequency mode](screenshots/bar-frequency.png) |
+
 ## Requirements
 
 - Omarchy with the Quickshell-based bar
